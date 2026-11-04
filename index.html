@@ -2,6 +2,8 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; script-src-attr 'none'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'; upgrade-insecure-requests">
+<meta name="referrer" content="strict-origin-when-cross-origin">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>NTI Sales and Marketing</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&family=Source+Sans+3:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -718,7 +720,7 @@
       <li><a href="#presence">Presence</a></li>
       <li><a href="#contact" class="nav-cta">Get In Touch</a></li>
     </ul>
-    <div class="mobile-toggle" onclick="document.getElementById('navLinks').classList.toggle('open')">
+    <div class="mobile-toggle">
       <span></span><span></span><span></span>
     </div>
   </div>
@@ -903,7 +905,7 @@
           </div>
           <div>
             <h4>Web</h4>
-            <a href="http://www.ntisales.com">www.ntisales.com</a>
+            <a href="https://www.ntisales.com">www.ntisales.com</a>
           </div>
         </div>
         <div class="contact-item">
@@ -940,7 +942,7 @@
           <label>Message</label>
           <textarea placeholder="Tell us about your brand and what you're looking for..."></textarea>
         </div>
-        <button class="btn btn-primary" onclick="window.location.href='mailto:anahmias@ntisales.com'" style="width:fit-content;">
+        <button class="btn btn-primary" id="emailContact" style="width:fit-content;">
           Send Message &rarr;
         </button>
       </div>
@@ -956,38 +958,6 @@
   </div>
 </footer>
 
-<script>
-// Nav scroll effect
-const nav = document.getElementById('navbar');
-window.addEventListener('scroll', () => {
-  nav.classList.toggle('scrolled', window.scrollY > 50);
-});
-
-// Reveal on scroll
-const reveals = document.querySelectorAll('.reveal');
-const observer = new IntersectionObserver((entries) => {
-  entries.forEach((entry, i) => {
-    if (entry.isIntersecting) {
-      setTimeout(() => entry.target.classList.add('visible'), i * 80);
-      observer.unobserve(entry.target);
-    }
-  });
-}, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
-reveals.forEach(el => observer.observe(el));
-
-// Active nav link
-const sections = document.querySelectorAll('section[id]');
-window.addEventListener('scroll', () => {
-  let current = '';
-  sections.forEach(section => {
-    const top = section.offsetTop - 120;
-    if (scrollY >= top) current = section.getAttribute('id');
-  });
-  document.querySelectorAll('.nav-links a').forEach(a => {
-    a.classList.remove('active');
-    if (a.getAttribute('href') === '#' + current) a.classList.add('active');
-  });
-});
-</script>
+<script src="site.js" defer></script>
 </body>
 </html>
