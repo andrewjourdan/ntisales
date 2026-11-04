@@ -35,7 +35,7 @@ window.addEventListener('scroll', () => {
 const contactForm = document.getElementById('contactForm');
 const formStatus = document.getElementById('cf-status');
 const formButton = document.getElementById('cf-submit');
-const FORM_ENDPOINT = 'https://formsubmit.co/ajax/andrew@andrewjourdan.com';
+const FORM_ENDPOINT = contactForm.action;
 const FALLBACK_EMAIL = 'andrew@andrewjourdan.com';
 
 function showStatus(type, html) {
@@ -48,10 +48,9 @@ contactForm.addEventListener('submit', async (e) => {
 
   const data = Object.fromEntries(new FormData(contactForm));
 
-  // Honeypot filled in = bot. Pretend success and send nothing.
+  // Avoid claiming delivery for requests that are not sent.
   if (data._honey) {
-    showStatus('success', 'Thank you &mdash; your message has been sent.');
-    contactForm.reset();
+    showStatus('error', 'Please reload the page and try again.');
     return;
   }
 
@@ -60,9 +59,12 @@ contactForm.addEventListener('submit', async (e) => {
   formButton.textContent = 'Sending…';
   formStatus.className = 'form-status';
 
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 15000);
   try {
     const res = await fetch(FORM_ENDPOINT, {
       method: 'POST',
+      signal: controller.signal,
       headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
       body: JSON.stringify(data)
     });
@@ -75,8 +77,10 @@ contactForm.addEventListener('submit', async (e) => {
       throw new Error(result.message || 'Request failed');
     }
   } catch (err) {
-    showStatus('error', 'Sorry, your message didn&rsquo;t go through. Please email us directly at <a href="mailto:' + FALLBACK_EMAIL + '">' + FALLBACK_EMAIL + '</a>.');
+    const detail = err.name === 'AbortError' ? 'The request timed out. Your message is still here.' : 'We could not send your message. Your message is still here.';
+    showStatus('error', detail + ' Please email us directly at <a href="mailto:' + FALLBACK_EMAIL + '">' + FALLBACK_EMAIL + '</a>.');
   } finally {
+    clearTimeout(timeout);
     formButton.disabled = false;
     formButton.innerHTML = originalLabel;
   }

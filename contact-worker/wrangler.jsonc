@@ -1,0 +1,30 @@
+{
+  "name": "nti-contact",
+  "main": "worker.mjs",
+  "compatibility_date": "2026-11-04",
+  "compatibility_flags": [
+    "nodejs_compat"
+  ],
+  "workers_dev": true,
+  "preview_urls": false,
+  "observability": {
+    "enabled": true,
+    "head_sampling_rate": 1
+  },
+  "send_email": [
+    {
+      "name": "EMAIL",
+      "destination_address": "andrew@andrewjourdan.com"
+    }
+  ],
+  "ratelimits": [
+    {
+      "name": "CONTACT_LIMIT",
+      "namespace_id": "901104",
+      "simple": {
+        "limit": 5,
+        "period": 60
+      }
+    }
+  ]
+}

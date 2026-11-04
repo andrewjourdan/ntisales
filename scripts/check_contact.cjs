@@ -10,13 +10,14 @@ for (const id of ['contactForm', 'cf-status', 'cf-submit', 'navbar', 'navLinks']
   assert.ok(html.includes('id="' + id + '"'), 'Missing element: ' + id);
 }
 assert.match(html, /src="site\.js\?[^"\s]+"/, 'Keep script cache version');
-assert.match(html, /action="https:\/\/formsubmit\.co\/andrew@andrewjourdan\.com"/);
+assert.ok(html.includes('action="https://nti-contact.andrew-ab0.workers.dev/contact"'));
 
 async function scenario(kind) {
   let handler, reset = false, requests = 0, prevented = false;
   const status = { className: '', innerHTML: '' };
   const button = { disabled: false, innerHTML: 'Send message', textContent: '' };
   const form = {
+    action: 'https://nti-contact.andrew-ab0.workers.dev/contact',
     addEventListener: (event, fn) => { assert.equal(event, 'submit'); handler = fn; },
     reset: () => { reset = true; }
   };
@@ -31,10 +32,12 @@ async function scenario(kind) {
     window: { addEventListener() {} },
     IntersectionObserver: class { observe() {} },
     FormData: class { constructor() { return Object.entries(data); } },
-    setTimeout: fn => fn(),
+    AbortController,
+    setTimeout: () => 1,
+    clearTimeout() {},
     fetch: async (url, options) => {
       requests++;
-      assert.equal(url, 'https://formsubmit.co/ajax/andrew@andrewjourdan.com');
+      assert.equal(url, 'https://nti-contact.andrew-ab0.workers.dev/contact');
       assert.equal(options.method, 'POST');
       assert.deepEqual(JSON.parse(options.body), data);
       if (kind === 'network') throw new Error('Offline');
@@ -46,11 +49,11 @@ async function scenario(kind) {
   assert.equal(prevented, true);
   assert.equal(requests, kind === 'honeypot' ? 0 : 1);
   assert.equal(button.disabled, false);
-  if (['success', 'honeypot'].includes(kind)) {
+  if (kind === 'success') {
     assert.match(status.className, /success/); assert.equal(reset, true);
   } else {
     assert.match(status.className, /error/); assert.equal(reset, false);
-    assert.match(status.innerHTML, /mailto:andrew@andrewjourdan\.com/);
+    if (kind !== 'honeypot') assert.match(status.innerHTML, /mailto:andrew@andrewjourdan\.com/);
   }
   assert.equal(button.innerHTML, 'Send message');
 }
