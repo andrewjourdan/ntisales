@@ -31,5 +31,55 @@ window.addEventListener('scroll', () => {
   });
 });
 
+// Contact form: sends via FormSubmit without leaving the page
+const contactForm = document.getElementById('contactForm');
+const formStatus = document.getElementById('cf-status');
+const formButton = document.getElementById('cf-submit');
+const FORM_ENDPOINT = 'https://formsubmit.co/ajax/andrew@andrewjourdan.com';
+const FALLBACK_EMAIL = 'andrew@andrewjourdan.com';
+
+function showStatus(type, html) {
+  formStatus.className = 'form-status show ' + type;
+  formStatus.innerHTML = html;
+}
+
+contactForm.addEventListener('submit', async (e) => {
+  e.preventDefault();
+
+  const data = Object.fromEntries(new FormData(contactForm));
+
+  // Honeypot filled in = bot. Pretend success and send nothing.
+  if (data._honey) {
+    showStatus('success', 'Thank you &mdash; your message has been sent.');
+    contactForm.reset();
+    return;
+  }
+
+  const originalLabel = formButton.innerHTML;
+  formButton.disabled = true;
+  formButton.textContent = 'Sending…';
+  formStatus.className = 'form-status';
+
+  try {
+    const res = await fetch(FORM_ENDPOINT, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+      body: JSON.stringify(data)
+    });
+    const result = await res.json().catch(() => ({}));
+
+    if (res.ok && (result.success === true || result.success === 'true')) {
+      showStatus('success', 'Thank you &mdash; your message has been sent. We&rsquo;ll be in touch soon.');
+      contactForm.reset();
+    } else {
+      throw new Error(result.message || 'Request failed');
+    }
+  } catch (err) {
+    showStatus('error', 'Sorry, your message didn&rsquo;t go through. Please email us directly at <a href="mailto:' + FALLBACK_EMAIL + '">' + FALLBACK_EMAIL + '</a>.');
+  } finally {
+    formButton.disabled = false;
+    formButton.innerHTML = originalLabel;
+  }
+});
+
 document.querySelector('.mobile-toggle').addEventListener('click', () => document.getElementById('navLinks').classList.toggle('open'));
-document.getElementById('emailContact').addEventListener('click', () => { window.location.href = 'mailto:anahmias@ntisales.com'; });

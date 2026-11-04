@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; script-src-attr 'none'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'; upgrade-insecure-requests">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; script-src-attr 'none'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src https://formsubmit.co; object-src 'none'; base-uri 'none'; form-action https://formsubmit.co; upgrade-insecure-requests">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>NTI Sales and Marketing</title>
@@ -637,6 +637,45 @@
     resize: vertical;
   }
 
+  .hp-field {
+    position: absolute;
+    left: -9999px;
+    width: 1px;
+    height: 1px;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .contact-form .btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+
+  .form-status {
+    display: none;
+    font-size: 15px;
+    line-height: 1.6;
+    padding: 14px 16px;
+    border-radius: 4px;
+    border-left: 3px solid transparent;
+  }
+
+  .form-status.show { display: block; }
+
+  .form-status.success {
+    background: #eef7f0;
+    border-left-color: #2e8540;
+    color: #1d5a2b;
+  }
+
+  .form-status.error {
+    background: #fdf0f0;
+    border-left-color: var(--nti-red);
+    color: var(--nti-red-dark);
+  }
+
+  .form-status a { color: inherit; font-weight: 600; }
+
   .contact-cta-text {
     font-size: 15px;
     color: var(--nti-text-light);
@@ -896,7 +935,7 @@
           </div>
           <div>
             <h4>Email</h4>
-            <a href="mailto:anahmias@ntisales.com">anahmias@ntisales.com</a>
+            <a href="mailto:andrew@andrewjourdan.com">andrew@andrewjourdan.com</a>
           </div>
         </div>
         <div class="contact-item">
@@ -923,29 +962,36 @@
         </div>
       </div>
 
-      <div class="contact-form reveal">
+      <form class="contact-form reveal" id="contactForm" action="https://formsubmit.co/andrew@andrewjourdan.com" method="POST">
+        <input type="hidden" name="_subject" value="New inquiry from ntisales.com">
+        <input type="hidden" name="_template" value="table">
+        <input type="hidden" name="_captcha" value="false">
+        <!-- Honeypot: real visitors never see or fill this; bots do -->
+        <input type="text" name="_honey" class="hp-field" tabindex="-1" autocomplete="off" aria-hidden="true">
+
         <div class="form-row">
           <div class="form-group">
-            <label>Name</label>
-            <input type="text" placeholder="Your name">
+            <label for="cf-name">Name</label>
+            <input type="text" id="cf-name" name="name" placeholder="Your name" autocomplete="name" required>
           </div>
           <div class="form-group">
-            <label>Company</label>
-            <input type="text" placeholder="Company name">
+            <label for="cf-company">Company</label>
+            <input type="text" id="cf-company" name="company" placeholder="Company name" autocomplete="organization">
           </div>
         </div>
         <div class="form-group">
-          <label>Email</label>
-          <input type="email" placeholder="your@email.com">
+          <label for="cf-email">Email</label>
+          <input type="email" id="cf-email" name="email" placeholder="your@email.com" autocomplete="email" required>
         </div>
         <div class="form-group">
-          <label>Message</label>
-          <textarea placeholder="Tell us about your brand and what you're looking for..."></textarea>
+          <label for="cf-message">Message</label>
+          <textarea id="cf-message" name="message" placeholder="Tell us about your brand and what you're looking for..." required></textarea>
         </div>
-        <button class="btn btn-primary" id="emailContact" style="width:fit-content;">
+        <button type="submit" class="btn btn-primary" id="cf-submit" style="width:fit-content;">
           Send Message &rarr;
         </button>
-      </div>
+        <p class="form-status" id="cf-status" role="status" aria-live="polite"></p>
+      </form>
     </div>
   </div>
 </section>
@@ -954,7 +1000,7 @@
 <footer>
   <div class="footer-inner">
     <p>&copy; 1994&ndash;2026 NTI Sales and Marketing. All rights reserved.</p>
-    <a href="mailto:anahmias@ntisales.com">anahmias@ntisales.com</a>
+    <a href="mailto:andrew@andrewjourdan.com">andrew@andrewjourdan.com</a>
   </div>
 </footer>
 
