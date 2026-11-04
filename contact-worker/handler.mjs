@@ -13,7 +13,7 @@ function response(origin, body, status = 200, extra = {}) {
   }});
 }
 
-export async function handle(request, env, makeEmail) {
+export async function handle(request, env) {
   const url = new URL(request.url);
   if (url.pathname === '/health' && request.method === 'GET') {
     return Response.json({ status: 'ok' }, { headers: { 'Cache-Control': 'no-store' } });
@@ -65,11 +65,26 @@ export async function handle(request, env, makeEmail) {
     `Message-ID: <${id}@andrewjourdan.com>`, `Date: ${new Date().toUTCString()}`, '', body,
   ].join('\r\n');
   try {
-    await env.EMAIL.send(makeEmail(SENDER, RECIPIENT, raw));
-    console.log(JSON.stringify({ event: 'contact_accepted', reference: id }));
-    return response(origin, { success: true, reference: id });
+    await env.CONTACT_QUEUE.send({ reference: id, raw }, { contentType: "json" });
+    console.log(JSON.stringify({ event: 'contact_queued', reference: id }));
+    return response(origin, { success: true, reference: id }, 202);
   } catch (error) {
-    console.error(JSON.stringify({ event: 'contact_failed', reference: id, code: error?.code || 'EMAIL_SEND_FAILED' }));
+    console.error(JSON.stringify({ event: 'contact_failed', reference: id, code: error?.code || 'QUEUE_WRITE_FAILED' }));
     return response(origin, { success: false, message: 'We could not send your message. Please email us directly or try again later.', reference: id }, 503);
+  }
+}
+
+
+export async function deliver(batch, env, makeEmail) {
+  for (const message of batch.messages) {
+    const { reference, raw } = message.body;
+    try {
+      const result = await env.EMAIL.send(makeEmail(SENDER, RECIPIENT, raw));
+      console.log(JSON.stringify({ event: 'contact_email_accepted', reference, messageId: result?.messageId }));
+      message.ack();
+    } catch (error) {
+      console.error(JSON.stringify({ event: 'contact_email_retry', reference, attempt: message.attempts, code: error?.code || 'EMAIL_SEND_FAILED' }));
+      message.retry({ delaySeconds: Math.min(3600, 60 * 2 ** Math.min(message.attempts, 6)) });
+    }
   }
 }

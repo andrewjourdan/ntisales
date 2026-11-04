@@ -26,5 +26,24 @@
         "period": 60
       }
     }
-  ]
+  ],
+  "queues": {
+    "producers": [
+      {
+        "binding": "CONTACT_QUEUE",
+        "queue": "nti-contact-delivery"
+      }
+    ],
+    "consumers": [
+      {
+        "queue": "nti-contact-delivery",
+        "max_batch_size": 1,
+        "max_batch_timeout": 1,
+        "max_retries": 10,
+        "retry_delay": 60,
+        "dead_letter_queue": "nti-contact-failed",
+        "max_concurrency": 1
+      }
+    ]
+  }
 }

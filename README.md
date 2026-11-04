@@ -32,8 +32,8 @@ Deploy the Worker separately from GitHub Pages when its source changes. Keep
 the deployed bindings and configuration consistent with `wrangler.jsonc`.
 
 A successful form response confirms acceptance by the email service, not inbox
-placement. The sender domain currently authorizes iCloud only in SPF; the owner chose
-to leave this unchanged. Notifications may go to junk. Check junk folders and
+placement. The sender domain authorizes iCloud and Cloudflare in SPF. Cloudflare DKIM
+is published separately from Apple DKIM. Check junk folders and
 mark expected inquiries as not junk. Live receipt
 must be checked separately after a material delivery change.
 
@@ -53,3 +53,13 @@ and contact controls. Automated checks do not validate external websites or inbo
 Domain renewal, DNS and HTTPS settings require separate verification.
 
 The existing LICENSE file governs use of this repository.
+
+## Contact delivery queue
+
+The HTTP endpoint acknowledges receipt only after `nti-contact-delivery` stores
+the inquiry. The queue consumer sends email separately, retries temporary failures
+up to ten times with backoff, and moves exhausted messages to `nti-contact-failed`.
+Both queues retain messages for 24 hours on the current free plan. Check the failed
+queue promptly if delivery issues are reported. Queue delivery is at least once;
+rare duplicate notifications are possible. Message contents are held in the queue,
+not written to application logs. A received confirmation is not an inbox-delivery receipt.
