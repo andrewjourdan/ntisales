@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; script-src-attr 'none'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src https://formsubmit.co; object-src 'none'; base-uri 'none'; form-action https://formsubmit.co; upgrade-insecure-requests">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; script-src-attr 'none'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src https://nti-contact.andrew-ab0.workers.dev; object-src 'none'; base-uri 'none'; form-action https://nti-contact.andrew-ab0.workers.dev; upgrade-insecure-requests">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>NTI Sales and Marketing</title>
@@ -969,30 +969,27 @@
         </div>
       </div>
 
-      <form class="contact-form reveal" id="contactForm" action="https://formsubmit.co/andrew@andrewjourdan.com" method="POST">
-        <input type="hidden" name="_subject" value="New inquiry from ntisales.com">
-        <input type="hidden" name="_template" value="table">
-        <input type="hidden" name="_captcha" value="false">
+      <form class="contact-form reveal" id="contactForm" action="https://nti-contact.andrew-ab0.workers.dev/contact" method="POST">
         <!-- Honeypot: real visitors never see or fill this; bots do -->
         <input type="text" name="_honey" class="hp-field" tabindex="-1" autocomplete="off" aria-hidden="true">
 
         <div class="form-row">
           <div class="form-group">
             <label for="cf-name">Name</label>
-            <input type="text" id="cf-name" name="name" placeholder="Your name" autocomplete="name" required>
+            <input maxlength="150" type="text" id="cf-name" name="name" placeholder="Your name" autocomplete="name" required>
           </div>
           <div class="form-group">
             <label for="cf-company">Company</label>
-            <input type="text" id="cf-company" name="company" placeholder="Company name" autocomplete="organization">
+            <input maxlength="200" type="text" id="cf-company" name="company" placeholder="Company name" autocomplete="organization">
           </div>
         </div>
         <div class="form-group">
           <label for="cf-email">Email</label>
-          <input type="email" id="cf-email" name="email" placeholder="your@email.com" autocomplete="email" required>
+          <input maxlength="254" type="email" id="cf-email" name="email" placeholder="your@email.com" autocomplete="email" required>
         </div>
         <div class="form-group">
           <label for="cf-message">Message</label>
-          <textarea id="cf-message" name="message" placeholder="Tell us about your brand and what you're looking for..." required></textarea>
+          <textarea maxlength="8000" id="cf-message" name="message" placeholder="Tell us about your brand and what you're looking for..." required></textarea>
         </div>
         <button type="submit" class="btn btn-primary" id="cf-submit" style="width:fit-content;">
           Send Message &rarr;
@@ -1011,6 +1008,6 @@
   </div>
 </footer>
 
-<script src="site.js?v=contact-2" defer></script>
+<script src="site.js?v=contact-3" defer></script>
 </body>
 </html>
