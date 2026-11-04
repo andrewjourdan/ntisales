@@ -71,7 +71,7 @@ contactForm.addEventListener('submit', async (e) => {
     const result = await res.json().catch(() => ({}));
 
     if (res.ok && (result.success === true || result.success === 'true')) {
-      showStatus('success', 'Thank you &mdash; your message has been sent. We&rsquo;ll be in touch soon.');
+      showStatus('success', 'Thank you &mdash; your inquiry has been received. We&rsquo;ll be in touch soon.');
       contactForm.reset();
     } else {
       throw new Error(result.message || 'Request failed');
