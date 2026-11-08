@@ -15,27 +15,15 @@ homepage metadata, local links and files, JSON-LD syntax, CNAME, sitemap and
 robots.txt. GitHub Actions runs these checks on pull requests and pushes to main.
 
 With Node.js 22 or newer, also run `node --check site.js` and
-`node scripts/check_contact.cjs`. The contact checks simulate success, service
-failure, network failure and the honeypot without sending messages.
+`node scripts/check_contact.cjs`. The contact checks confirm the form builds the
+email to hnahmias@ntisales.com and that the honeypot blocks bots, without sending anything.
 
-The contact form posts to the `nti-contact` Cloudflare Worker, which sends only
-to the verified address andrew@andrewjourdan.com. The visitor's email is used
-as Reply-To. FormSubmit is no longer used. There are no public API keys.
-
-The Worker validates input, bounds the request size, restricts browser origins,
-and rate-limits each IP to five requests per minute. It logs reference IDs and
-outcomes, without logging contact details or message bodies. Site checks also
-run `node --test contact-worker/handler.test.mjs` for delivery and abuse handling.
-
-Worker source and its deployment configuration live in `contact-worker/`.
-Deploy the Worker separately from GitHub Pages when its source changes. Keep
-the deployed bindings and configuration consistent with `wrangler.jsonc`.
-
-A successful form response confirms acceptance by the email service, not inbox
-placement. The sender domain authorizes iCloud and Cloudflare in SPF. Cloudflare DKIM
-is published separately from Apple DKIM. Check junk folders and
-mark expected inquiries as not junk. Live receipt
-must be checked separately after a material delivery change.
+The contact form opens the visitor's email app with the inquiry addressed to
+hnahmias@ntisales.com (subject, name, company, email and message pre-filled).
+Nothing is sent until the visitor presses Send in their email app, and the site
+has no form backend, Worker, API keys or third-party form service. All contact
+links on the page also go to hnahmias@ntisales.com, which is hosted with the
+domain's own mail service (Network Solutions MX records).
 
 Update the `site.js` query string in index.html when changing that script to
 refresh browser caches. Failed submissions retain the visitor's message.
@@ -53,13 +41,3 @@ and contact controls. Automated checks do not validate external websites or inbo
 Domain renewal, DNS and HTTPS settings require separate verification.
 
 The existing LICENSE file governs use of this repository.
-
-## Contact delivery queue
-
-The HTTP endpoint acknowledges receipt only after `nti-contact-delivery` stores
-the inquiry. The queue consumer sends email separately, retries temporary failures
-up to ten times with backoff, and moves exhausted messages to `nti-contact-failed`.
-Both queues retain messages for 24 hours on the current free plan. Check the failed
-queue promptly if delivery issues are reported. Queue delivery is at least once;
-rare duplicate notifications are possible. Message contents are held in the queue,
-not written to application logs. A received confirmation is not an inbox-delivery receipt.
