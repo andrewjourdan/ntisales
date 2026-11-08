@@ -2,11 +2,11 @@
 
 ## Supported versions
 
-Security fixes apply to the latest version on the `main` branch and the current deployment of https://ntisales.com/, including the contact Worker maintained in this repository. Older commits, forks, and third-party services are not maintained by this project.
+Security fixes apply to the latest version on the `main` branch and the current deployment of https://ntisales.com/. Older commits, forks, and third-party services are not maintained by this project.
 
 ## Reporting a vulnerability
 
-Please report suspected vulnerabilities privately to [andrew@andrewjourdan.com](mailto:andrew@andrewjourdan.com) with the subject `Security report: ntisales.com`.
+Please report suspected vulnerabilities privately to [hnahmias@ntisales.com](mailto:hnahmias@ntisales.com) with the subject `Security report: ntisales.com`.
 
 Do not post vulnerabilities, credentials, personal information, or exploit details in public issues or pull requests.
 
@@ -27,4 +27,4 @@ Allow the maintainer time to investigate and coordinate a fix before publishing 
 
 ## Security maintenance
 
-Changes should use pull requests and pass the repository's required checks before merging. Keep credentials in the hosting provider's secret storage, never in repository files or browser code. Review dependencies and GitHub Actions when they change, and verify the deployed site and contact flow after security-related changes. Account access, DNS, email, and hosting settings require separate review.
+Changes should use pull requests and pass the repository's required checks before merging. Keep credentials in the hosting provider's secret storage, never in repository files or browser code. Review dependencies and GitHub Actions when they change, and verify the deployed site and contact links after security-related changes. Account access, DNS, email, and hosting settings require separate review.

@@ -25,7 +25,6 @@ jobs:
       - run: python scripts/check_site.py
       - run: node --check site.js
       - run: node scripts/check_contact.cjs
-      - run: node --test contact-worker/handler.test.mjs
       - name: Package public website files
         run: |
           mkdir -p _site

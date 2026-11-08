@@ -25,4 +25,3 @@ jobs:
           node-version: '22'
       - run: node --check site.js
       - run: node scripts/check_contact.cjs
-      - run: node --test contact-worker/handler.test.mjs
